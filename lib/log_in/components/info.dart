@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_photo_sharing_clone_app/account_check/account_check.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../forget_password/forget_password.dart';
 import '../../home_screen/home_screen.dart';
+import '../../sign_up/sign_up_screen.dart';
 import '../../widgets/button_login.dart';
 import '../../widgets/input_field.dart';
 
@@ -78,6 +80,12 @@ class Credentials extends StatelessWidget {
             }catch(error){
               Fluttertoast.showToast(msg: error.toString());
             }
+          },
+        ),
+        AccountCheck(
+          login: true,
+          press: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => SignUpScreen()));
           },
         ),
       ],
