@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "689890578453",
+    "project_id": "flutter-photo-sharing-ap-d09b6",
+    "storage_bucket": "flutter-photo-sharing-ap-d09b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689890578453:android:9c544c7d967a7361dcfe1c",
+        "android_client_info": {
+          "package_name": "com.example.flutter_photo_sharing_clone_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689890578453-qmholqp33qa8dsi3u7fi98i79i5v9ag8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYxHG3OSNyClTMbG6iHZJgGj_8nV1sjuo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689890578453-qmholqp33qa8dsi3u7fi98i79i5v9ag8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
