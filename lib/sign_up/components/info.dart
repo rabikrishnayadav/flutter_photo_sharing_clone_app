@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_photo_sharing_clone_app/widgets/input_field.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Credentials extends StatefulWidget {
 
@@ -18,6 +20,85 @@ class _CredentialsState extends State<Credentials> {
 
   File? imageFile;
 
+  void _showImageDialog(){
+    showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: const Text("Please choose an option"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: (){
+                    _getFromCamera();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.camera,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "Camera",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: (){
+                    _getFromGallery();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "Gallery",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+  void _getFromCamera() async{
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    _cropImage(pickedFile!.path);
+    Navigator.pop(context);
+  }
+
+  void _getFromGallery() async{
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    _cropImage(pickedFile!.path);
+    Navigator.pop(context);
+  }
+
+  void _cropImage(filePath) async{
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: filePath, maxHeight: 1080, maxWidth: 1080);
+
+    if(croppedImage != null){
+      setState((){
+        imageFile = File(croppedImage.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,7 +108,7 @@ class _CredentialsState extends State<Credentials> {
         children: [
           GestureDetector(
             onTap: (){
-              // create show ImageDialog
+              _showImageDialog();
             },
             child: CircleAvatar(
               radius: 90,
