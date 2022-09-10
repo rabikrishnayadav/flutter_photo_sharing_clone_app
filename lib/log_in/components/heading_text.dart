@@ -14,7 +14,7 @@ class HeadText extends StatelessWidget {
             SizedBox(height: size.height * 0.05,),
             const Center(
               child: Text(" PhotoSharing", style: TextStyle(
-                fontSize: 70,
+                fontSize: 40,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontFamily: "Signatra",
@@ -24,7 +24,7 @@ class HeadText extends StatelessWidget {
             const SizedBox(height: 20.0,),
             const Center(
               child: Text("Login", style: TextStyle(
-                fontSize: 30,
+                fontSize: 25,
                 color: Colors.white30,
                 fontWeight: FontWeight.bold,
                 fontFamily: "Bebas",

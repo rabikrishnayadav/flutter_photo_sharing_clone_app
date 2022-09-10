@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_photo_sharing_clone_app/widgets/input_field.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../forget_password/forget_password.dart';
+import '../../home_screen/home_screen.dart';
+import '../../widgets/button_login.dart';
+import '../../widgets/input_field.dart';
 
 class Credentials extends StatelessWidget {
 
@@ -38,6 +43,42 @@ class Credentials extends StatelessWidget {
           icon: Icons.lock_rounded,
           obscureText: false,
           textEditingController: _passTextController,
+        ),
+        const SizedBox(height: 15.0,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: (){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ForgetPasswordScreen()));
+              }, // Text
+              child: const Text(
+                  "Forget Password?",
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                  fontSize: 17,
+                ),
+              ),
+            ),
+          ],
+        ),
+        ButtonLogin(
+          text: "Login",
+          colors1: Colors.red,
+          colors2: Colors.redAccent,
+
+          press: () async{
+            try{
+              await _auth.signInWithEmailAndPassword(
+                  email: _emailTextController.text.trim().toLowerCase(),
+                  password: _passTextController.text.trim(),
+              );
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+            }catch(error){
+              Fluttertoast.showToast(msg: error.toString());
+            }
+          },
         ),
       ],
       ),

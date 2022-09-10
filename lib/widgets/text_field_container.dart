@@ -22,11 +22,11 @@ class TextFieldContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
-        offset: Offset(-2, -2),
-        spreadRadius: 1,
-        blurRadius: 4,
-        color: Colors.red,
-        ),
+            offset: Offset(-2, -2),
+            spreadRadius: 1,
+            blurRadius: 4,
+            color: Colors.red,
+          ),
           BoxShadow(
             offset: Offset(2, 2),
             spreadRadius: 1,
