@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_photo_sharing_clone_app/widgets/button_square.dart';
 import 'package:flutter_photo_sharing_clone_app/widgets/input_field.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Credentials extends StatefulWidget {
 
@@ -13,12 +18,16 @@ class Credentials extends StatefulWidget {
 
 class _CredentialsState extends State<Credentials> {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final TextEditingController _fullNameController = TextEditingController(text: "");
   final TextEditingController _emailController = TextEditingController(text: "");
   final TextEditingController _passController = TextEditingController(text: "");
   final TextEditingController _phoneNumController = TextEditingController(text: "");
 
   File? imageFile;
+
+  String? imageUrl;
 
   void _showImageDialog(){
     showDialog(
@@ -121,7 +130,7 @@ class _CredentialsState extends State<Credentials> {
           ),
           const SizedBox(height: 10.0,),
           InputField(
-              hintText: "Enter Username",
+              hintText: "Enter Full Name",
               icon: Icons.person,
               obscureText: false,
               textEditingController: _fullNameController,
@@ -142,12 +151,48 @@ class _CredentialsState extends State<Credentials> {
           ),
           const SizedBox(height: 10.0,),
           InputField(
-            hintText: "Enter Username",
+            hintText: "Enter Phone Number",
             icon: Icons.phone_android,
             obscureText: false,
             textEditingController: _phoneNumController,
           ),
           const SizedBox(height: 10.0,),
+          ButtonSquare(
+            text: "Create Account",
+            colors1: Colors.red,
+            colors2: Colors.redAccent,
+            press: () async{
+              if(imageFile == null){
+                Fluttertoast.showToast(msg: "Please select an Image");
+                return;
+              }
+              try{
+                final ref = FirebaseStorage.instance.ref().child("userImages").child(DateTime.now().toString() + '.jpg');
+                await ref.putFile(imageFile!);
+                imageUrl = await ref.getDownloadURL();
+                await _auth.createUserWithEmailAndPassword(
+                    email: _emailController.text.trim().toLowerCase(),
+                    password: _passController.text.trim(),
+                );
+                final User? user = _auth.currentUser;
+                final _uid = user!.uid;
+                FirebaseFirestore.instance.collection("users").doc(_uid).set({
+                  'id' : _uid,
+                  'userImage' : imageUrl,
+                  'name' : _fullNameController.text,
+                  'email' : _emailController.text,
+                  'phoneNumber' : _phoneNumController.text,
+                  'password' : _passController.text,
+                  'createdAt' : Timestamp.now(),
+                });
+                Navigator.canPop(context) ? Navigator.pop(context) : null;
+              }catch(error){
+                Fluttertoast.showToast(msg: error.toString());
+              }
+              // create Home Page
+            },
+          ),
+
         ],
       ),
     );

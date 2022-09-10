@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ButtonLogin extends StatelessWidget {
+class ButtonSquare extends StatelessWidget {
 
   final String text;
   final VoidCallback press;
   final Color colors1;
   final Color colors2;
 
-  ButtonLogin({
+  ButtonSquare({
     required this.text,
     required this.press,
     required this.colors1,
