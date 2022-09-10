@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'log_in/login_screen.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp( MyApp());
@@ -39,10 +41,10 @@ class MyApp extends StatelessWidget {
              ),
            );
          }
-       return const MaterialApp(
+       return MaterialApp(
          debugShowCheckedModeBanner: false,
          title: "Flutter Photo Sharing Clone App",
-         home: Scaffold(),
+         home: LoginScreen(),
        );
       }
     );
