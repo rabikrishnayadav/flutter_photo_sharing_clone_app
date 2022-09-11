@@ -211,6 +211,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget gridViewWidget (String docId, String img, String userImg, String name, DateTime date, String userId, int downloads){
+    return GridView.count(
+      primary: false,
+      padding: const EdgeInsets.all(6.0),
+      crossAxisSpacing: 1,
+      crossAxisCount: 1,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.pink, Colors.deepOrange.shade300],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              stops: [0.2, 0.9],
+            ),
+          ),
+          padding: const EdgeInsets.all(10.0),
+          child: GestureDetector(
+            onTap: (){
+              // create owner details
+            },
+            child: Center(
+              child: Image.network(img, fit: BoxFit.fill,),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
