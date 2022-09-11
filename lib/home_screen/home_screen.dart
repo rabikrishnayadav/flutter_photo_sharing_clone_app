@@ -8,6 +8,7 @@ import 'package:flutter_photo_sharing_clone_app/log_in/login_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -143,6 +144,71 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     read_userInfo();
+  }
+
+  Widget listViewWidget (String docId, String img, String userImg, String name, DateTime date, String userId, int downloads){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 16.0,
+        shadowColor: Colors.white10,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.pink, Colors.deepOrange.shade300],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              stops: [0.2, 0.9],
+            ),
+          ),
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: (){
+                  // create ownerDetails
+                },
+                child: Image.network(
+                  img,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 15.0,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundImage: NetworkImage(
+                        userImg,
+                      ),
+                    ),
+                    const SizedBox(width: 10.0,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10.0,),
+                        Text(
+                          DateFormat("dd MMMM, yyyy -hh:mm a").format(date).toString(),
+                          style: const TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
