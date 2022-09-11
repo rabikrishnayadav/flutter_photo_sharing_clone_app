@@ -10,6 +10,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../owner_details/owner_details.dart';
+
 class HomeScreen extends StatefulWidget {
 
   @override
@@ -168,7 +170,15 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               GestureDetector(
                 onTap: (){
-                  // create ownerDetails
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => OwnerDetails(
+                    img: img,
+                    userImg: userImg,
+                    name: name,
+                    date: date,
+                    docId: docId,
+                    userId: userId,
+                    downloads: downloads,
+                  )));
                 },
                 child: Image.network(
                   img,
@@ -232,7 +242,15 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(10.0),
           child: GestureDetector(
             onTap: (){
-              // create owner details
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => OwnerDetails(
+                img: img,
+                userImg: userImg,
+                name: name,
+                date: date,
+                docId: docId,
+                userId: userId,
+                downloads: downloads,
+              )));
             },
             child: Center(
               child: Image.network(img, fit: BoxFit.fill,),
