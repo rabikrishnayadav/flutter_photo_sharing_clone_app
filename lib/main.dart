@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'home_screen/home_screen.dart';
 import 'log_in/login_screen.dart';
 
 void main() {
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
        return MaterialApp(
          debugShowCheckedModeBanner: false,
          title: "Flutter Photo Sharing Clone App",
-         home: LoginScreen(),
+         home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : HomeScreen(),
        );
       }
     );
