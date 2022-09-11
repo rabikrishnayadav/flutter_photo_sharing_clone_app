@@ -18,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  String changeTitle = "Grid View";
+  bool checkView = false;
   File? imageFile;
 
   String? imageUrl;
@@ -292,6 +294,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          title: GestureDetector(
+            onTap: (){
+              setState(() {
+                changeTitle = "List View";
+                checkView  = true;
+              });
+            },
+            onDoubleTap: (){
+              setState(() {
+                changeTitle = "Grid View";
+                checkView  = false;
+              });
+            },
+            child: Text(changeTitle),
+          ),
+          centerTitle: true,
           leading: GestureDetector(
             onTap: (){
               FirebaseAuth.instance.signOut();
@@ -301,6 +319,62 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.login_outlined
             ),
           ),
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('wallpaper').orderBy('createdAt', descending: true).snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator(),);
+            } else if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.data!.docs.isNotEmpty) {
+                if (checkView == true) {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return listViewWidget(
+                          snapshot.data!.docs[index].id,
+                          snapshot.data!.docs[index]['image'],
+                          snapshot.data!.docs[index]['userImage'],
+                          snapshot.data!.docs[index]['name'],
+                          snapshot.data!.docs[index]['createdAt'].toDate(),
+                          snapshot.data!.docs[index]['id'],
+                          snapshot.data!.docs[index]['downloads'],
+                        );
+                      }
+                  );
+                }else{
+                  return GridView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3
+                    ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return gridViewWidget(
+                          snapshot.data!.docs[index].id,
+                          snapshot.data!.docs[index]['image'],
+                          snapshot.data!.docs[index]['userImage'],
+                          snapshot.data!.docs[index]['name'],
+                          snapshot.data!.docs[index]['createdAt'].toDate(),
+                          snapshot.data!.docs[index]['id'],
+                          snapshot.data!.docs[index]['downloads'],
+                        );
+                      }
+                  );
+                }
+              }else{
+                return const Center(
+                  child: Text('There is no tasks',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                );
+              }
+            }
+            return const Center(
+              child: Text('Something went wrong',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
+            );
+          },
         ),
       ),
     );
