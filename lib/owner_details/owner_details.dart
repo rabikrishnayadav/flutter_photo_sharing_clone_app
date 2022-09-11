@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OwnerDetails extends StatefulWidget {
 
@@ -75,7 +76,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30.0,),
+                const SizedBox(height: 10.0,),
                 Text(
                   "Uploaded By : " + widget.name!,
                   style: const TextStyle(
@@ -83,6 +84,30 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                const SizedBox(height: 10.0,),
+                Text(
+                  DateFormat("dd MMMM, yyyy - hh:mm a ").format(widget.date!).toString(),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 50.0,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.download_outlined,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      " " + widget.downloads.toString(),
+                      style: const TextStyle(
+                        fontSize: 28.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
