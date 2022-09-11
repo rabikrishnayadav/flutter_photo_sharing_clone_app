@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_photo_sharing_clone_app/account_check/account_check.dart';
+import 'package:flutter_photo_sharing_clone_app/home_screen/home_screen.dart';
+import 'package:flutter_photo_sharing_clone_app/log_in/login_screen.dart';
 import 'package:flutter_photo_sharing_clone_app/widgets/button_square.dart';
 import 'package:flutter_photo_sharing_clone_app/widgets/input_field.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -167,7 +170,7 @@ class _CredentialsState extends State<Credentials> {
                 return;
               }
               try{
-                final ref = FirebaseStorage.instance.ref().child("userImages").child(DateTime.now().toString() + '.jpg');
+                final ref = FirebaseStorage.instance.ref().child("userImages").child('${DateTime.now()}.jpg');
                 await ref.putFile(imageFile!);
                 imageUrl = await ref.getDownloadURL();
                 await _auth.createUserWithEmailAndPassword(
@@ -189,10 +192,15 @@ class _CredentialsState extends State<Credentials> {
               }catch(error){
                 Fluttertoast.showToast(msg: error.toString());
               }
-              // create Home Page
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
             },
           ),
-
+          AccountCheck(
+              login: false,
+              press: (){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+              },
+          ),
         ],
       ),
     );
