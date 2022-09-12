@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_photo_sharing_clone_app/home_screen/home_screen.dart';
+import 'package:flutter_photo_sharing_clone_app/widgets/button_square.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_downloader/image_downloader.dart';
 import 'package:intl/intl.dart';
 
 class OwnerDetails extends StatefulWidget {
@@ -26,6 +32,9 @@ class OwnerDetails extends StatefulWidget {
 }
 
 class _OwnerDetailsState extends State<OwnerDetails> {
+
+  int? total;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +63,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                   ),
                 ),
                 const SizedBox(height: 30.0,),
-                Text(
+                const Text(
                   'Owner Information',
                   style: TextStyle(
                     fontSize: 30.0,
@@ -78,7 +87,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                 ),
                 const SizedBox(height: 10.0,),
                 Text(
-                  "Uploaded By : " + widget.name!,
+                  "Uploaded By : ${widget.name!}",
                   style: const TextStyle(
                     fontSize: 18.0,
                     color: Colors.white,
@@ -100,7 +109,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                       color: Colors.white,
                     ),
                     Text(
-                      " " + widget.downloads.toString(),
+                      " ${widget.downloads}",
                       style: const TextStyle(
                         fontSize: 28.0,
                         color: Colors.white,
@@ -108,6 +117,32 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 50.0,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: ButtonSquare(
+                    text: "Download",
+                    colors1: Colors.green,
+                    colors2: Colors.lightGreen,
+                    press: () async{
+                      try{
+                        var imageId = await ImageDownloader.downloadImage(widget.img!);
+                        if(imageId == null){
+                          return;
+                        }
+                        Fluttertoast.showToast(msg: "Image Saved to Gallery");
+                        total = widget.downloads! + 1;
+                        FirebaseFirestore.instance.collection('wallpaper')
+                            .doc(widget.docId).update({'downloads': total,
+                        }).then((value){
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                        });
+                      } on PlatformException catch (error){
+                        print(error);
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
