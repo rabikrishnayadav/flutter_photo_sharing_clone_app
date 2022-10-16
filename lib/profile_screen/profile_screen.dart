@@ -169,6 +169,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update({
       'name': userNameInput,
+    }).whenComplete(() {
+      _updateProfileNameOnUserExistingPosts();
+    });
+  }
+
+  _updateProfileNameOnUserExistingPosts() async{
+    await FirebaseFirestore.instance.collection('wallpaper')
+        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((snapshot){
+      for(int index = 0; index<snapshot.docs.length; index++){
+        String userProfileNameInPost = snapshot.docs[index]['name'];
+        if(userProfileNameInPost != userNameInput){
+          FirebaseFirestore.instance.collection('wallpaper')
+              .doc(snapshot.docs[index].id)
+              .update({
+            'name': userNameInput,
+          });
+        }
+      }
     });
   }
 
