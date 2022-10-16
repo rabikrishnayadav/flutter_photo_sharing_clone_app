@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? phoneNo = '';
 
   File? imageXFile;
+  String? userNameInput = '';
 
   Future _getDataFromDatabase() async{
     await FirebaseFirestore.instance.collection("users")
@@ -124,6 +125,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future _updateUserName() async {
+    await FirebaseFirestore.instance.collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'name': userNameInput,
+    });
+  }
+
+  _displayTextInputDialog(BuildContext context) async{
+    return showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: const Text("Update your Name Here"),
+            content: TextField(
+              onChanged: (value){
+                setState(() {
+                  userNameInput = value;
+                });
+              },
+              decoration: const InputDecoration(hintText: "Type here"),
+            ),
+            actions: [
+              ElevatedButton(
+                  child: const Text('Cancel', style: TextStyle(color:  Colors.white),),
+                onPressed: (){
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
+              ),
+              ElevatedButton(
+                child: const Text('Save', style: TextStyle(color:  Colors.white),),
+                onPressed: (){
+                  _updateUserName();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                ),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 IconButton(
                   onPressed: (){
-                    // display text input dialog
+                    _displayTextInputDialog(context);
                   },
                   icon: const Icon(Icons.edit),
                 ),
