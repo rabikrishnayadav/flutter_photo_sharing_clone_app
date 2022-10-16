@@ -7,6 +7,7 @@ import 'package:flutter_photo_sharing_clone_app/home_screen/home_screen.dart';
 import 'package:flutter_photo_sharing_clone_app/log_in/login_screen.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 
 class ProfileScreen extends StatefulWidget {
 
@@ -22,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? phoneNo = '';
 
   File? imageXFile;
+  String? userImageUrl;
   String? userNameInput = '';
 
   Future _getDataFromDatabase() async{
@@ -121,8 +123,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if(croppedImage != null){
       setState((){
         imageXFile = File(croppedImage.path);
+        _updateImageInFirestore();
       });
     }
+  }
+  
+  _updateImageInFirestore() async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    fStorage.Reference reference = fStorage.FirebaseStorage.instance.ref()
+    .child("userImages").child(fileName);
+    fStorage.UploadTask uploadTask = reference.putFile(File(imageXFile!.path));
+    fStorage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+    await taskSnapshot.ref.getDownloadURL().then((url) async{
+      userImageUrl = url;
+    });
+    await FirebaseFirestore.instance.collection("users")
+    .doc(FirebaseAuth.instance.currentUser!.uid)
+    .update({
+      'userImage': userImageUrl,
+    });
   }
 
   Future _updateUserName() async {
