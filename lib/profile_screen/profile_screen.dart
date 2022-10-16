@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_photo_sharing_clone_app/home_screen/home_screen.dart';
 import 'package:flutter_photo_sharing_clone_app/log_in/login_screen.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -41,6 +43,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // TODO: implement initState
     super.initState();
     _getDataFromDatabase();
+  }
+
+  void _showImageDialog(){
+    showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: const Text("Please choose an option"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: (){
+                    _getFromCamera();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.camera,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "Camera",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: (){
+                    _getFromGallery();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "Gallery",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+  void _getFromCamera() async{
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    _cropImage(pickedFile!.path);
+    Navigator.pop(context);
+  }
+
+  void _getFromGallery() async{
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    _cropImage(pickedFile!.path);
+    Navigator.pop(context);
+  }
+
+  void _cropImage(filePath) async{
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: filePath, maxHeight: 1080, maxWidth: 1080);
+
+    if(croppedImage != null){
+      setState((){
+        imageXFile = File(croppedImage.path);
+      });
+    }
   }
 
   @override
@@ -84,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             GestureDetector(
               onTap: (){
-                // show image dialog
+                _showImageDialog();
               },
               child: CircleAvatar(
                 backgroundColor: Colors.amber,
